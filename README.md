@@ -148,6 +148,46 @@ I also created a flag to change which team to fallow instead of the default team
 --fav-team                Select a team to follow by using it's ID (Default: 8 "Montreal Canadiens") 
 ```
 
+## Startup on Pi
+Create our startup script
+```
+nano ~/start-scoreboard.sh
+```
+
+Paste the following:
+```
+#!/bin/bash
+git checkout master
+git fetch -p origin
+git merge origin/master
+
+cd /home/pi/nhl-led-scoreboard
+n=0
+until [ $n -ge 10 ]
+do
+   python main.py --led-gpio-mapping=adafruit-hat --led-brightness=60 --led-slowdown-gpio=2 && break
+   # Uncomment and use this line instead if you did the anti-flicker mod:
+   #python main.py --led-gpio-mapping=adafruit-hat-pwm --led-brightness=60 --led-slowdown-gpio=2 && break
+   n=$[$n+1]
+   sleep 10
+done
+```
+
+Next, make it executable:
+```
+chmod +x ~/start-scoreboard.sh
+```
+
+Next, run the script on boot:
+```
+sudo crontab -e
+```
+
+Add the following command to the bottom:
+```
+@reboot /home/pi/start-scoreboard.sh > /home/pi/cron.log 2>&1
+```
+
 ## Licensing
 This project use the GNU Public License. If you intend to sell these, the code must remain open source.
 
