@@ -81,8 +81,8 @@ class MainRenderer:
             home_team_logo_pos = self.screen_config.team_logos_pos[str(overview['home_team_id'])]['home']
 
             # Open the logo image file
-            away_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
-            home_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
+            away_team_logo = Image.open('logos/{}_away.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
+            home_team_logo = Image.open('logos/{}_home.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
 
             # Draw the text on the Data image.
             self.draw.text((22, -1), 'TODAY', font=self.font_mini)
@@ -194,7 +194,7 @@ class MainRenderer:
                 # (Need to make the screen run on it's own) If connection to the API fails, show bottom red line and refresh in 1 min.
                 self.draw.line((0, 0) + (self.width, 0), fill=128)
                 self.canvas = self.matrix.SwapOnVSync(self.canvas)
-                time.sleep(60)  # sleep for 1 min
+                time.sleep(10)  # sleep for 1 min
 
     def _draw_post_game(self):
         self.data.refresh_overview()
