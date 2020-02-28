@@ -156,8 +156,8 @@ class MainRenderer:
                 home_team_logo_pos = self.screen_config.team_logos_pos[str(overview['home_team_id'])]['home']
 
                 # Open the logo image file
-                away_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
-                home_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
+                away_team_logo = Image.open('logos/{}_away.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
+                home_team_logo = Image.open('logos/{}_home.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
 
                 # Draw the text on the Data image.
                 self.draw.multiline_text((score_position, 15), score, fill=(255, 255, 255), font=self.font, align="center")
@@ -223,8 +223,8 @@ class MainRenderer:
                 self.draw.multiline_text((period_position, 11), period, fill=(255, 255, 255), font=self.font_mini,align="center")
 
             # Open the logo image file
-            away_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
-            home_team_logo = Image.open('logos/{}.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
+            away_team_logo = Image.open('logos/{}_away.png'.format(self.data.get_teams_info[overview['away_team_id']]['abbreviation']))
+            home_team_logo = Image.open('logos/{}_home.png'.format(self.data.get_teams_info[overview['home_team_id']]['abbreviation']))
 
             # Set the position of each logo on screen.
             away_team_logo_pos = self.screen_config.team_logos_pos[str(overview['away_team_id'])]['away']
