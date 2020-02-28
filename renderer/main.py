@@ -189,12 +189,12 @@ class MainRenderer:
                 home_score = overview['home_score']
 
                 self.data.needs_refresh = True
-                time.sleep(60)
+                time.sleep(10)
             else:
                 # (Need to make the screen run on it's own) If connection to the API fails, show bottom red line and refresh in 1 min.
                 self.draw.line((0, 0) + (self.width, 0), fill=128)
                 self.canvas = self.matrix.SwapOnVSync(self.canvas)
-                time.sleep(10)  # sleep for 1 min
+                time.sleep(60)  # sleep for 1 min
 
     def _draw_post_game(self):
         self.data.refresh_overview()
