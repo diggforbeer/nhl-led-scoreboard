@@ -157,11 +157,13 @@ nano ~/start-scoreboard.sh
 Paste the following:
 ```
 #!/bin/bash
+
+cd /home/pi/nhl-led-scoreboard
+
 git checkout master
 git fetch -p origin
 git merge origin/master
 
-cd /home/pi/nhl-led-scoreboard
 n=0
 until [ $n -ge 10 ]
 do
