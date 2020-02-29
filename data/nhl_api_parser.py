@@ -1,6 +1,7 @@
 import requests
 import datetime
 from utils import convert_time
+import debug
 
 NHL_API_URL = "http://statsapi.web.nhl.com/api/v1/"
 NHL_API_URL_BASE = "http://statsapi.web.nhl.com"
@@ -146,7 +147,8 @@ def fetch_overview(team_id):
 def fetch_fav_team_schedule(team_id):
     """ Function to get the summary of a scheduled game. """
     # Set URL depending on team selected
-    url = '{0}schedule?teamId={1}'.format(NHL_API_URL, team_id)
+    now = datetime.datetime.now()
+    url = '{0}schedule?teamId={1}&date={2}'.format(NHL_API_URL, team_id,now.strftime("%Y-%m-%d"))
 
     try:
         game_data = requests.get(url)
@@ -180,11 +182,13 @@ def check_season():
 def check_if_game(team_id):
     """ Function to check if there is a game now with chosen team. Returns True if game, False if NO game. """
     # Set URL depending with team selected
-    url = '{0}schedule?teamId={1}'.format(NHL_API_URL, team_id)
+    now = datetime.datetime.now()
+    url = '{0}schedule?teamId={1}&date={2}'.format(NHL_API_URL, team_id,now.strftime("%Y-%m-%d"))
     try:
         game_data = requests.get(url)
         game_data = game_data.json()
         game = game_data["totalGames"]
+        debug.info(game_data)
         if game != 0:
             status = int(game_data["dates"][0]["games"][0]['status']['statusCode'])
             return status
