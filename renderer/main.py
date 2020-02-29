@@ -276,6 +276,6 @@ class MainRenderer:
             time.sleep(0.1)
 
     def _draw_off_day(self):
-        self.draw.text((0, -1), 'NO GAME TODAY', font=self.font_mini)
+        self.draw.text((0, -1), 'NO GAME TODAY!', font=self.font_mini)
         self.canvas.SetImage(self.image, 0, 0)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
