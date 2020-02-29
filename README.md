@@ -159,7 +159,7 @@ Paste the following:
 #!/bin/bash
 
 cd /home/pi/nhl-led-scoreboard
-
+sleep 2m
 git checkout master
 git fetch -p origin
 git merge origin/master
