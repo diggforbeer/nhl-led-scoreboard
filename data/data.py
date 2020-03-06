@@ -29,7 +29,9 @@ class Data:
         # Look if favorite team play today
         self.refresh_fav_team_status()
 
+        self.get_wildcard_standings()
 
+        
 
     def __parse_today(self):
         today = datetime.today()
@@ -57,3 +59,6 @@ class Data:
 
     def check_fav_team_next_game(self):
         pass
+    
+    def get_wildcard_standings(self):
+        self.wildcard_standings = nhlparser.fetch_wildcard_standings(self.fav_team_id)

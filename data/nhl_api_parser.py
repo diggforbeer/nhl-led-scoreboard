@@ -1,5 +1,6 @@
 import requests
 import datetime
+import json
 from utils import convert_time
 import debug
 
@@ -198,3 +199,44 @@ def check_if_game(team_id):
         # Return True to allow for another pass for test
         print("Error encountered, Can't reach the NHL API")
         return False
+
+def fetch_team(team_id):
+    url = '{0}/teams/{1}'.format(NHL_API_URL,team_id)
+
+    try:
+        teams = requests.get(url)
+        teams = teams.json()
+        #debug.info(teams)
+        return teams["teams"][0]
+    except requests.exceptions.RequestException:
+        # Return True to allow for another pass for test
+        print("Error encountered, Can't reach the NHL API")
+        return False
+
+def fetch_wildcard_standings(team_id):
+    team = fetch_team(team_id)
+    url = '{0}/standings/wildCardWithLeaders'.format(NHL_API_URL)
+    try:
+        schedule_data = requests.get(url)
+        schedule_data = schedule_data.json()
+        #debug.info(schedule_data)
+        wildcard = ""
+        divison = ""
+
+        for item in schedule_data["records"]:
+            #debug.info(item)
+            if (item["conference"]["id"] == team["conference"]["id"]):
+                if (item["standingsType"] == "wildCard"):
+                    wildcard = item["teamRecords"]
+            if 'division' in item:
+                if (item["division"]["id"] == team["division"]["id"]):
+                    divison = item["teamRecords"]
+       
+        current_wildcard_standings_by_divison = {'wildcard': wildcard, 'divison': divison}
+        debug.info(json.dumps(current_wildcard_standings_by_divison, indent=2))
+        return current_wildcard_standings_by_divison
+    except requests.exceptions.RequestException:
+        # Return True to allow for another pass for test
+        print("Error encountered, Can't reach the NHL API")
+        return False
+    

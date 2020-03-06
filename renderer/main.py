@@ -59,10 +59,10 @@ class MainRenderer:
         debug.info('ping render_game')
 
     def __render_off_day(self):
-
+        self.data.get_wildcard_standings()
         debug.info('ping_day_off')
         self._draw_off_day()
-        time.sleep(21600) #sleep 6 hours
+        time.sleep(3600) #sleep 1 hours - to keep the chart updated
 
     def _draw_pregame(self):
 
@@ -276,6 +276,16 @@ class MainRenderer:
             time.sleep(0.1)
 
     def _draw_off_day(self):
-        self.draw.text((0, -1), 'NO GAME TODAY!', font=self.font_mini)
+        line = -1
+        for divison_leader in self.data.wildcard_standings["divison"]:
+            self.draw.text((0, line), str(divison_leader["points"]), font=self.font_mini)
+            self.draw.text((9, line), divison_leader["team"]["name"], font=self.font_mini)
+            line = line + 6
+
+        for wildcard in self.data.wildcard_standings["wildcard"]:
+            self.draw.text((0, line), str(wildcard["points"]), font=self.font_mini)
+            self.draw.text((9, line), wildcard["team"]["name"], font=self.font_mini)
+            line = line + 6
+
         self.canvas.SetImage(self.image, 0, 0)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
