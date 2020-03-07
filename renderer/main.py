@@ -277,15 +277,21 @@ class MainRenderer:
 
     def _draw_off_day(self):
         line = -1
+        col = 0
         for divison_leader in self.data.wildcard_standings["divison"]:
-            self.draw.text((0, line), str(divison_leader["points"]), font=self.font_mini)
-            self.draw.text((9, line), divison_leader["team"]["name"], font=self.font_mini)
+            self.draw.text((col, line), str(divison_leader["points"]), font=self.font_mini)
+            self.draw.text((col + 9, line), divison_leader["team"]["abbreviation"],fill=(divison_leader["team"]["r"],divison_leader["team"]["g"],divison_leader["team"]["b"]), font=self.font_mini)
             line = line + 6
 
         for wildcard in self.data.wildcard_standings["wildcard"]:
-            self.draw.text((0, line), str(wildcard["points"]), font=self.font_mini)
-            self.draw.text((9, line), wildcard["team"]["name"], font=self.font_mini)
-            line = line + 6
+            #debug.info("col: {0} line: {1}".format(col,line))
+            self.draw.text((col, line), str(wildcard["points"]), font=self.font_mini)
+            self.draw.text((col + 9, line), wildcard["team"]["abbreviation"],fill=(wildcard["team"]["r"],wildcard["team"]["g"],wildcard["team"]["b"]), font=self.font_mini)
+            if ( line == 23):
+                line = -1
+                col = col + 22
+            else :
+                line = line + 6
 
         self.canvas.SetImage(self.image, 0, 0)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)

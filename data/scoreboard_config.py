@@ -15,7 +15,8 @@ class ScoreboardConfig:
             self.fav_team_id = args.fav_team
         else:
             self.fav_team_id = json['fav_team_id']
-
+        
+        
     def read_json(self, filename):
         # Find and return a json file
 

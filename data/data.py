@@ -31,7 +31,6 @@ class Data:
 
         self.get_wildcard_standings()
 
-        
 
     def __parse_today(self):
         today = datetime.today()

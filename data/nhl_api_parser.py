@@ -7,9 +7,9 @@ import debug
 NHL_API_URL = "http://statsapi.web.nhl.com/api/v1/"
 NHL_API_URL_BASE = "http://statsapi.web.nhl.com"
 
+COLORS = {"1":"206,17,38","2":"0,83,155","3":"0,56,168","4":"247,73,2","5":"252,181,20","6":"252,181,20","7":"0,38,84","8":"175,30,45","9":"197,32,50","10":"0,32,91","12":"226,24,54","13":"4,30,66","14":"0,40,104","15":"200,16,46","16":"207,10,44","17":"206,17,38","18":"255,184,28","19":"0,47,135","20":"200,16,46","21":"111,38,61","22":"252,76,0","23":"0,32,91","24":"252,76,2","25":"0,104,71","26":"162,170,173","28":"0,109,117","29":"0,38,84","30":"2,73,48","52":"4,30,66","53":"140,38,51","54":"185,151,91"}
 
 # TEST_URL = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=2018-01-02&endDate=2018-01-02"
-
 def get_teams():
     """
         Function to get a list of all the teams information
@@ -25,16 +25,16 @@ def get_teams():
         }
         This make it a lot simpler to call each info of a specific team as all info in the API are associated with a team ID
     """
-
     url = '{0}/teams'.format(NHL_API_URL)
     response = requests.get(url)
     results = response.json()
     teams = {}
     try:
         for team in results['teams']:
+            team_id = str(team['id'])
             info_dict = {'name': team['teamName'], 'location': team['locationName'],
                          'abbreviation': team['abbreviation'], 'conference': team['conference']['name'],
-                         'division': team['division']['name']}
+                         'division': team['division']['name'], 'rgb': COLORS[team_id]}
             teams[team['id']] = info_dict
         return teams
     except requests.exceptions.RequestException:
@@ -215,6 +215,8 @@ def fetch_team(team_id):
 
 def fetch_wildcard_standings(team_id):
     team = fetch_team(team_id)
+    teams = get_teams()
+    #debug.info(teams)
     url = '{0}/standings/wildCardWithLeaders'.format(NHL_API_URL)
     try:
         schedule_data = requests.get(url)
@@ -231,9 +233,24 @@ def fetch_wildcard_standings(team_id):
             if 'division' in item:
                 if (item["division"]["id"] == team["division"]["id"]):
                     divison = item["teamRecords"]
-       
+
+        #add abrev back to team so we can use it.  Not sure why they left it out
+        for item in wildcard:
+            teamId = int(item["team"]["id"])
+            item["team"]["abbreviation"] = teams[teamId]["abbreviation"]
+            item["team"]["r"] = int(teams[teamId]["rgb"].split(',')[0])
+            item["team"]["g"] = int(teams[teamId]["rgb"].split(',')[1])
+            item["team"]["b"] = int(teams[teamId]["rgb"].split(',')[2])
+            
+        for item in divison:
+            teamId = int(item["team"]["id"])
+            item["team"]["abbreviation"] = teams[teamId]["abbreviation"]
+            item["team"]["r"] = int(teams[teamId]["rgb"].split(',')[0])
+            item["team"]["g"] = int(teams[teamId]["rgb"].split(',')[1])
+            item["team"]["b"] = int(teams[teamId]["rgb"].split(',')[2])
+
         current_wildcard_standings_by_divison = {'wildcard': wildcard, 'divison': divison}
-        debug.info(json.dumps(current_wildcard_standings_by_divison, indent=2))
+        #debug.info(json.dumps(current_wildcard_standings_by_divison, indent=2))
         return current_wildcard_standings_by_divison
     except requests.exceptions.RequestException:
         # Return True to allow for another pass for test
