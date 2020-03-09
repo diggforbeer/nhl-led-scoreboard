@@ -294,4 +294,6 @@ class MainRenderer:
                 line = line + 6
 
         self.canvas.SetImage(self.image, 0, 0)
+        self.image = Image.new('RGB', (self.width, self.height))
+        self.draw = ImageDraw.Draw(self.image)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
