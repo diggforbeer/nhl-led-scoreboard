@@ -61,3 +61,6 @@ class Data:
     
     def get_wildcard_standings(self):
         self.wildcard_standings = nhlparser.fetch_wildcard_standings(self.fav_team_id)
+    
+    def refresh_current_games(self):
+        self.refresh_games = nhlparser.fetch_games()

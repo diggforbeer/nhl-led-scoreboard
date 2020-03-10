@@ -97,7 +97,7 @@ def fetch_games():
             home_score = int(game_data['dates'][0]['games'][game]['teams']['home']['score'])
             away_team_id = int(game_data['dates'][0]['games'][game]['teams']['away']['team']['id'])
             away_score = int(game_data['dates'][0]['games'][game]['teams']['away']['score'])
-            game_status = int(game_data['dates'][0]['games'][0]['status']['statusCode'])
+            game_status = int(game_data['dates'][0]['games'][game]['status']['statusCode'])
             game_time = convert_time(game_data["dates"][0]["games"][game]["gameDate"]).strftime("%I:%M")
 
             gameInfo = {"gameid": game_id, "full_stats_link": live_stats_link, "home_team_id": home_team_id,

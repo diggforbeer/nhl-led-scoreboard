@@ -35,6 +35,8 @@ class MainRenderer:
             # Fav team off day
             else:
                 debug.info('Off day State')
+                self.data.refresh_current_games()
+                self.data.get_wildcard_standings()
                 self.__render_off_day()
 
     def __render_game(self):
@@ -59,7 +61,6 @@ class MainRenderer:
         debug.info('ping render_game')
 
     def __render_off_day(self):
-        self.data.get_wildcard_standings()
         debug.info('ping_day_off')
         self._draw_off_day()
         time.sleep(3600) #sleep 1 hours - to keep the chart updated
@@ -276,16 +277,26 @@ class MainRenderer:
             time.sleep(0.1)
 
     def _draw_off_day(self):
+        debug.info(self.data.refresh_games)
         line = -1
         col = 0
         for divison_leader in self.data.wildcard_standings["divison"]:
-            self.draw.text((col, line), str(divison_leader["points"]), font=self.font_mini)
+            is_team_playing = self.is_team_currently_playing(divison_leader["team"]["id"])
+            #debug.info(is_team_playing)
+            if is_team_playing:
+                self.draw.text((col, line), str(divison_leader["points"]), fill=(255, 0, 0), font=self.font_mini)
+            else:
+                self.draw.text((col, line), str(divison_leader["points"]), font=self.font_mini)
             self.draw.text((col + 9, line), divison_leader["team"]["abbreviation"],fill=(divison_leader["team"]["r"],divison_leader["team"]["g"],divison_leader["team"]["b"]), font=self.font_mini)
             line = line + 6
 
         for wildcard in self.data.wildcard_standings["wildcard"]:
             #debug.info("col: {0} line: {1}".format(col,line))
-            self.draw.text((col, line), str(wildcard["points"]), font=self.font_mini)
+            is_team_playing = self.is_team_currently_playing(wildcard["team"]["id"])
+            if is_team_playing:
+                self.draw.text((col, line), str(wildcard["points"]), fill=(255, 0, 0), font=self.font_mini)
+            else:
+                self.draw.text((col, line), str(wildcard["points"]), font=self.font_mini)
             self.draw.text((col + 9, line), wildcard["team"]["abbreviation"],fill=(wildcard["team"]["r"],wildcard["team"]["g"],wildcard["team"]["b"]), font=self.font_mini)
             if ( line == 23):
                 line = -1
@@ -297,3 +308,13 @@ class MainRenderer:
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
+    
+    def is_team_currently_playing(self, teamId):
+        #debug.info("Checking for {0}".format(teamId))
+        for playing_team in self.data.refresh_games:
+            if playing_team["home_team_id"] == teamId or playing_team["away_team_id"] == teamId:
+                if ( playing_team["game_status"] == 3 or playing_team["game_status" == 4]):
+                    #debug.info(playing_team)
+                    return True
+                
+        return False
