@@ -313,7 +313,7 @@ class MainRenderer:
         #debug.info("Checking for {0}".format(teamId))
         for playing_team in self.data.refresh_games:
             if playing_team["home_team_id"] == teamId or playing_team["away_team_id"] == teamId:
-                if playing_team["game_status"] == 3 or playing_team["game_status" == 4]:
+                if playing_team["game_status"] == 3 or playing_team["game_status"] == 4:
                     #debug.info(playing_team)
                     return True
                 
